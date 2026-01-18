@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Love Story ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="heart.png">
+
+<style>
+* { box-sizing: border-box; user-select: none; }
+
+body {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+    color: #333;
+    overflow-x: hidden;
+}
+
+header {
+    padding: 70px 20px;
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+}
+
+header h1 { font-size: 2.6em; }
+header p { font-size: 1.1em; }
+
+section {
+    padding: 60px 15px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* SWIPE CAROUSEL */
+.swipe-container {
+    overflow: hidden;
+    max-width: 100%;
+    position: relative;
+}
+
+.swipe-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.35s ease;
+    padding: 0 10vw;
+}
+
+.swipe-track img {
+    flex: 0 0 80vw;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 22px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+}
+
+/* TIMELINE */
+.timeline {
+    max-width: 720px;
+    margin: auto;
+}
+
+.month {
+    background: rgba(255,255,255,0.92);
+    padding: 22px;
+    margin: 20px 0;
+    border-radius: 18px;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.month.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.month h3 { color: #e75480; }
+
+/* FLOATING HEARTS */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0) scale(1); opacity: 1; }
+    to { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+}
+
+/* DESKTOP TWEAK */
+@media (min-width: 768px) {
+    .swipe-track img {
+        flex: 0 0 40vw;
+        height: 360px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Our Love Story ❤️</h1>
+    <p>Six months of love and beautiful memories</p>
+</header>
+
+<section>
+    <h2>Swipe Our Memories 💕</h2>
+
+    <div class="swipe-container">
+        <div class="swipe-track" id="track">
+            <img src="1.jpeg">
+            <img src="2.jpeg">
+            <img src="3.jpeg">
+            <img src="8.jpeg">
+            <img src="5.jpeg">
+            <img src="6.jpeg">
+            <img src="7.jpeg">
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Our 6-Month Journey 💖</h2>
+    <div class="timeline">
+        <div class="month"><h3>JULY 31st</h3><p>Where everything began ❤️</p></div>
+        <div class="month"><h3>AUGUST</h3><p>Getting closer every day</p></div>
+        <div class="month"><h3>SEPTEMBER</h3><p>Laughs and late nights (First kiss 😘)</p></div>
+        <div class="month"><h3>October</h3><p>Standing strong together</p></div>
+        <div class="month"><h3>November</h3><p>Love that feels like home</p></div>
+        <div class="month"><h3>December</h3><p>Forever starts here 💕</p></div>
+    </div>
+</section>
+
+<footer style="text-align:center; padding:30px; background:rgba(255,255,255,0.9);">
+    Made with endless love ❤️
+</footer>
+
+<script>
+/* ===== SWIPE + DRAG (TOUCH + MOUSE) ===== */
+const track = document.getElementById("track");
+let isDragging = false;
+let startX = 0;
+let currentX = 0;
+let translateX = 0;
+let prevTranslate = 0;
+
+function getPositionX(e) {
+    return e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+}
+
+function dragStart(e) {
+    isDragging = true;
+    startX = getPositionX(e);
+    track.style.transition = "none";
+}
+
+function dragMove(e) {
+    if (!isDragging) return;
+    currentX = getPositionX(e);
+    translateX = prevTranslate + currentX - startX;
+    track.style.transform = `translateX(${translateX}px)`;
+}
+
+function dragEnd() {
+    isDragging = false;
+    track.style.transition = "transform 0.35s ease";
+    prevTranslate = translateX;
+}
+
+track.addEventListener("mousedown", dragStart);
+track.addEventListener("mousemove", dragMove);
+track.addEventListener("mouseup", dragEnd);
+track.addEventListener("mouseleave", dragEnd);
+
+track.addEventListener("touchstart", dragStart);
+track.addEventListener("touchmove", dragMove);
+track.addEventListener("touchend", dragEnd);
+
+/* FLOATING HEARTS */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}, 700);
+
+/* TIMELINE ANIMATION */
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("show");
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll(".month").forEach(m => observer.observe(m));
+</script>
+
+</body>
+</html>
